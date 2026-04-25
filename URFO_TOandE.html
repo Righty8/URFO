@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URFO — Military Order of Battle</title>
+<script src="urfo_units.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07100a;--bg2:#0b160d;--bg3:#0f1f13;
+  --border:#1a3520;--border2:#254d2e;
+  --green:#2ef870;--green2:#1db84f;--green3:#0d6b2e;--dim:#2a5c36;
+  --text:#b8dfc2;--text2:#6a9c77;
+  --amber:#ffb020;--amber2:#c4840a;
+  --cyan:#3af0f0;--red:#ff4455;
+  --mono:'Share Tech Mono','Courier New',monospace;
+  --sans:'Rajdhani','Arial Narrow',sans-serif;
+  --col-division:#ffb020;--col-regiment:#ff7c2a;
+  --col-battalion:#2ef870;--col-company:#3af0f0;--col-platoon:#a080ff;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:9999}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.2;pointer-events:none;z-index:0}
+#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+header{background:var(--bg2);border-bottom:1px solid var(--border2);padding:0 24px;display:flex;align-items:center;gap:20px;height:54px;flex-shrink:0}
+.hlogo{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--amber);letter-spacing:4px}
+.hsub{color:var(--text2);font-size:10px;letter-spacing:2px}
+.hspace{flex:1}
+.hclock{color:var(--green);font-size:10px;opacity:0.7}
+
+/* BREADCRUMB */
+#breadcrumb{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 24px;display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap;min-height:34px}
+.crumb{color:var(--text2);cursor:pointer;font-size:11px;letter-spacing:1px;padding:2px 6px;border-radius:2px;transition:color .15s,background .15s}
+.crumb:hover{color:var(--amber);background:rgba(255,176,32,.08)}
+.crumb-sep{color:var(--dim);font-size:10px}
+.crumb-cur{color:var(--amber);font-size:11px;letter-spacing:1px;padding:2px 6px}
+
+/* MAIN */
+#main{flex:1;padding:24px;max-width:1200px;width:100%;margin:0 auto}
+
+/* UNIT HEADER */
+.uhead{background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--lc,var(--green));padding:16px 20px;margin-bottom:20px}
+.uhead-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.lvl-badge{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--bg);background:var(--lc,var(--green));padding:2px 8px;border-radius:2px;flex-shrink:0;margin-top:3px}
+.uname{font-family:var(--sans);font-size:26px;font-weight:700;color:#fff;letter-spacing:2px;line-height:1.1}
+.unotes{margin-top:7px;color:var(--text2);font-size:12px;line-height:1.6;max-width:700px}
+
+/* EQUIP BAR */
+.ebar{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+.echip{display:flex;align-items:center;gap:5px;background:rgba(46,248,112,.07);border:1px solid var(--border2);padding:3px 10px 3px 7px;border-radius:2px}
+.echip-k{color:var(--text2);font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.echip-v{color:var(--green);font-size:14px;font-weight:bold}
+.echip.pers{border-color:var(--amber2);background:rgba(255,176,32,.07)}
+.echip.pers .echip-v{color:var(--amber)}
+
+/* SECTION LABEL */
+.slabel{color:var(--text2);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.glabel{grid-column:1/-1;color:var(--text2);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+
+/* GRID */
+.ugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+
+/* UNIT CARD */
+.ucard{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--lc,var(--green));padding:13px 15px;cursor:pointer;position:relative;overflow:hidden;transition:border-color .15s,background .15s,transform .1s}
+.ucard:hover{background:var(--bg3);border-color:var(--border2);transform:translateY(-1px)}
+.ucard::after{content:'▶';position:absolute;top:50%;right:13px;transform:translateY(-50%);color:var(--dim);font-size:10px;transition:color .15s,right .1s}
+.ucard:hover::after{color:var(--lc,var(--green));right:10px}
+.ctop{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.cbadge{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bg);background:var(--lc,var(--green));padding:1px 6px;border-radius:2px;flex-shrink:0}
+.ccnt{font-size:10px;color:var(--text2)}
+.cname{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--text);letter-spacing:1px;line-height:1.2;padding-right:20px;transition:color .15s}
+.ucard:hover .cname{color:#fff}
+.cequip{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.cei{font-size:10px;color:var(--text2);background:var(--bg3);border:1px solid var(--border);padding:1px 6px;border-radius:2px}
+.cei span{color:var(--green2);margin-left:3px}
+.cpers{font-size:10px;color:var(--amber2);background:rgba(255,176,32,.07);border:1px solid rgba(255,176,32,.2);padding:1px 6px;border-radius:2px}
+.cpers span{color:var(--amber);margin-left:3px}
+.cmissing{opacity:.5;cursor:default}
+.cmissing::after{display:none}
+
+/* EQUIP TABLE (platoon leaf) */
+.etable{width:100%;border-collapse:collapse;margin-top:8px}
+.etable th{text-align:left;color:var(--text2);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:6px 12px;border-bottom:1px solid var(--border2);font-weight:normal}
+.etable td{padding:6px 12px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text)}
+.etable td:last-child{color:var(--green);text-align:right;font-size:15px}
+.etable tr:last-child td{border-bottom:none}
+.etable tr:hover td{background:var(--bg3)}
+
+/* ARMY CARD */
+.acard{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--ac,var(--amber));padding:20px 50px 20px 24px;cursor:pointer;position:relative;overflow:hidden;transition:background .15s,transform .1s;margin-bottom:12px}
+.acard:hover{background:var(--bg3);transform:translateY(-2px)}
+.acard:hover .aname{color:#fff}
+.aname{font-family:var(--sans);font-size:28px;font-weight:700;letter-spacing:3px;color:#fff;margin-bottom:3px;transition:color .15s}
+.afull{color:var(--text2);font-size:11px;letter-spacing:2px;margin-bottom:9px}
+.acmdr{color:var(--amber);font-size:12px;margin-bottom:5px}
+.adesc{color:var(--text2);font-size:12px;line-height:1.6;max-width:600px}
+.astats{display:flex;gap:20px;flex-wrap:wrap;margin-top:13px;padding-top:13px;border-top:1px solid var(--border)}
+.asval{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--ac,var(--amber))}
+.aslbl{color:var(--text2);font-size:10px;letter-spacing:2px}
+.aarrow{position:absolute;right:22px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:24px;transition:color .15s}
+.acard:hover .aarrow{color:var(--ac,var(--amber))}
+
+/* HOME */
+.htitle{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:var(--text2);margin-bottom:4px}
+.hmain{font-family:var(--sans);font-size:42px;font-weight:700;letter-spacing:6px;color:var(--amber);margin-bottom:5px;text-shadow:0 0 40px rgba(255,176,32,.3)}
+.hline{color:var(--text2);font-size:11px;letter-spacing:2px;margin-bottom:30px}
+
+.empty{color:var(--dim);font-size:12px;letter-spacing:1px;padding:20px;border:1px dashed var(--border);text-align:center;grid-column:1/-1}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ani{animation:fadeIn .18s ease both}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* UNIT TYPE ICONS */
+.uicon{display:inline-block;vertical-align:-0.22em;margin-right:8px;color:var(--text);flex-shrink:0;line-height:0}
+.uicon svg{height:1.2em;width:auto;display:block;overflow:visible;max-width:3.6em}
+.uhead .uicon svg{height:1.4em;max-width:4.2em}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="hlogo">URFO</div>
+    <div class="hsub">TABLE OF ORGANISATION AND EQUIPEMENT // GROUND FORCES</div>
+    <div class="hspace"></div>
+    <div class="hclock" id="clock"></div>
+  </header>
+  <div id="breadcrumb"></div>
+  <div id="main"></div>
+</div>
+<script>
+// ── CONSTANTS ──
+const LC = {division:'var(--col-division)',regiment:'var(--col-regiment)',battalion:'var(--col-battalion)',company:'var(--col-company)',platoon:'var(--col-platoon)'};
+const LORDER = ['division','regiment','battalion','company','platoon'];
+
+// ══════════════════════════════════════════════════════════════
+//  U N I T   T Y P E   I C O N S   (NATO APP-6 inspired)
+// ══════════════════════════════════════════════════════════════
+//
+//  Add `type: "tank"` to any unit to render its icon.
+//  Add `iconColor: "recon"` to tint it (see ICON_COLORS below).
+//  iconColor also accepts any CSS color: "#ff00ff", "red", etc.
+//
+//  Adding a new icon: just drop a new SVG string in this dict.
+//  SVGs should use stroke/fill="currentColor" so they pick up
+//  the color from iconColor. Recommended viewBox: 0 0 30 22.
+//
+const ICONS = {
+  // ── INFANTRY ──
+  infantry:     `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M2.5 3.5 L27.5 16.5 M27.5 3.5 L2.5 16.5"/></svg>`,
+
+  // ── ARMOR ──
+  tank:         `<svg viewBox="-10 130 525 170" fill="currentColor"> <path style="fill-rule: nonzero; paint-order: fill;" d="M -7.947 169.68 L -7.137 191.2 L 206.098 189.612 L 213.505 200.725 L 107.812 213.423 L 83.872 239.351 L 112.036 255.697 C 112.036 255.697 151.067 270.578 204.809 270.708 C 262.827 270.848 337.456 275.144 395.826 265.089 C 445.31 256.564 489.258 247.676 493.087 239.436 C 502.892 218.335 507.307 185.217 507.307 185.217 L 432.033 186.169 L 354.526 190.167 L 360.524 184.219 L 429.916 179.976 L 424.626 145.165 L 328.326 150.458 L 324.621 137.758 L 285.468 141.463 L 283.879 150.458 L 248.429 150.458 L 244.724 137.758 L 241.021 150.458 L 226.207 152.574 L 226.207 159.981 L 202.395 159.981 L 200.277 167.388 L -7.947 169.68 Z"/><ellipse style="stroke-width: 1px;" cx="128.319" cy="247.286" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="173.215" cy="271.766" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="224.787" cy="273.809" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="273.297" cy="273.809" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="321.297" cy="273.296" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="369.295" cy="271.766" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="421.89" cy="269.722" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="462.738" cy="246.744" rx="22.223" ry="22.223"/></svg>`,
+  cmd_tank:         `<svg viewBox="-10 130 525 170" fill="currentColor"><ellipse style="stroke-width: 1px;" cx="128.319" cy="247.286" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="173.215" cy="271.766" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="224.787" cy="273.809" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="273.297" cy="273.809" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="321.297" cy="273.296" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="369.295" cy="271.766" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="421.89" cy="269.722" rx="22.223" ry="22.223"/><ellipse style="stroke-width: 1px;" cx="462.738" cy="246.744" rx="22.223" ry="22.223"/><path d="M 295.263 156.103 L 307.788 192.134 L 345.926 192.912 L 315.528 215.958 L 326.574 252.469 L 295.263 230.681 L 263.952 252.469 L 274.998 215.958 L 244.6 192.912 L 282.738 192.134 L 295.263 156.103 Z M -7.947 169.68 L -7.137 191.2 L 206.098 189.612 L 213.505 200.725 L 107.812 213.423 L 83.872 239.351 L 112.036 255.697 C 112.036 255.697 151.067 270.578 204.809 270.708 C 262.827 270.848 337.456 275.144 395.826 265.089 C 445.31 256.564 489.258 247.676 493.087 239.436 C 502.892 218.335 507.307 185.217 507.307 185.217 L 432.033 186.169 L 354.526 190.167 L 360.524 184.219 L 429.916 179.976 L 424.626 145.165 L 328.326 150.458 L 324.621 137.758 L 285.468 141.463 L 283.879 150.458 L 248.429 150.458 L 244.724 137.758 L 241.021 150.458 L 226.207 152.574 L 226.207 159.981 L 202.395 159.981 L 200.277 167.388 L -7.947 169.68 Z" style=" stroke: rgb(0, 0, 0); fill-rule: evenodd;"/></svg>`,
+
+  // ── IFV / APC ──
+  ifv_tracked:  `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="26" height="14" rx="1"/><ellipse cx="15" cy="10" rx="10" ry="4.5"/><path d="M3 4 L27 16 M27 4 L3 16"/></svg>`,
+  ifv_heavy:    `<svg viewBox="0 0 30 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="13" y="0" width="4" height="2.2" fill="currentColor"/><rect x="2" y="5" width="26" height="14" rx="1"/><ellipse cx="15" cy="12" rx="10" ry="4.5"/><path d="M3 6 L27 18 M27 6 L3 18"/></svg>`,
+  ifv_wheeled:  `<svg viewBox="0 0 30 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="26" height="14" rx="1"/><ellipse cx="15" cy="10" rx="10" ry="4.5"/><path d="M3 4 L27 16 M27 4 L3 16"/><circle cx="9" cy="20" r="1.4" fill="currentColor"/><circle cx="21" cy="20" r="1.4" fill="currentColor"/></svg>`,
+  apc_tracked:  `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="26" height="14" rx="1"/><ellipse cx="15" cy="10" rx="10" ry="4.5"/></svg>`,
+  apc_wheeled:  `<svg viewBox="0 0 30 22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="26" height="14" rx="1"/><ellipse cx="15" cy="10" rx="10" ry="4.5"/><circle cx="9" cy="20" r="1.4" fill="currentColor"/><circle cx="21" cy="20" r="1.4" fill="currentColor"/></svg>`,
+
+  // ── TRANSPORT ──
+  car:          `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="26" height="14" rx="1"/><circle cx="15" cy="10" r="4"/><circle cx="15" cy="10" r="1.3" fill="currentColor"/></svg>`,
+  truck:        `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M6 14 L6 9 L11 9 L11 6 L19 6 L19 14 Z" fill="currentColor" stroke="none"/><rect x="19" y="8" width="6" height="6" fill="currentColor" stroke="none"/></svg>`,
+
+  // ── ARTILLERY ──
+  artillery:    `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="26" height="14" rx="1"/><circle cx="15" cy="10" r="3.5" fill="currentColor"/></svg>`,
+  spg:          `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="26" height="14" rx="1"/><ellipse cx="15" cy="10" rx="10" ry="4.5"/><circle cx="15" cy="10" r="2.8" fill="currentColor"/></svg>`,
+  mortar:       `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M15 15 L15 10 M10 5 L15 10 L20 5"/><circle cx="15" cy="15.5" r="1" fill="currentColor"/></svg>`,
+  mlrs:         `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><circle cx="15" cy="13" r="2.3" fill="currentColor"/><path d="M15 11 L15 5 M11.5 8 L15 4.5 L18.5 8"/></svg>`,
+  atgm:         `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M7 10 L22 10 M18 6 L22 10 L18 14"/></svg>`,
+
+  // ── AIR DEFENSE ──
+  aaa_towed:    `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M9 14 L15 5 L21 14"/><path d="M12 14 L18 14"/></svg>`,
+  aaa_tracked:  `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><ellipse cx="15" cy="11" rx="10" ry="4.5"/><path d="M9 14 L15 5 L21 14"/></svg>`,
+  manpads:   `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M10 15 L15 4 L20 15 Z" fill="currentColor"/></svg>`,
+  missile_ad:   `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M10 15 L15 4 L20 15 Z" fill="currentColor"/></svg>`,
+
+  // ── RECON ──
+  recon:        `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="26" height="14" rx="1"/><line x1="3" y1="16.5" x2="27" y2="3.5"/></svg>`,
+
+  // ── SUPPORT / OTHER ──
+  engineers:    `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M20 5.5 L11 5.5 L11 10 L17 10 M11 14.5 L20 14.5"/></svg>`,
+  mp:           `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="26" height="14" rx="1"/><text x="15" y="14.5" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-weight="700" font-size="10" fill="currentColor" stroke="none" letter-spacing="0.5">MP</text></svg>`,
+  medical:      `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M15 6 L15 14 M11 10 L19 10"/></svg>`,
+  signal:       `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M9 6 L21 6 L9 14 L21 14"/></svg>`,
+  logistics:    `<svg viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="26" height="14" rx="1"/><path d="M11 6 L19 6 M15 6 L15 14 M11 14 L19 14"/></svg>`,
+  hq:           `<svg viewBox="0 0 30 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2 5 L2 1 L9 1" stroke-linecap="round"/><rect x="2" y="5" width="26" height="14" rx="1"/></svg>`
+};
+
+// Color palette for iconColor keyword. Falls back to the raw string.
+const ICON_COLORS = {
+  standard:  'var(--text)',
+  recon:     'var(--cyan)',
+  arty:      'var(--amber)',
+  ad:        'var(--red)',
+  engineer:  'var(--green)',
+  logistics: 'var(--text2)',
+  command:   'var(--amber)'
+};
+
+function iconHTML(u){
+  if(!u||!u.type)return'';
+  const svg=ICONS[u.type];
+  if(!svg)return'';
+  const col=u.iconColor?(ICON_COLORS[u.iconColor]||u.iconColor):'';
+  const style=col?` style="color:${col}"`:'';
+  return `<span class="uicon"${style}>${svg}</span>`;
+}
+
+// ── NAV STATE ──
+let stack = [{type:'home'}];
+function nav(frame){stack.push(frame);render()}
+function goTo(i){stack=stack.slice(0,i+1);render()}
+
+// ── AGGREGATION ──
+function agg(id,count=1){
+  const u=UNITS[id];
+  if(!u)return{eq:{},p:0};
+  let eq={},p=0;
+  if(u.equipment){
+    for(const[k,v]of Object.entries(u.equipment))eq[k]=(eq[k]||0)+v*count;
+    p=(u.personnel||0)*count;
+  }
+  if(u.composition){
+    for(const c of u.composition){
+      const r=agg(c.id,(c.count||1)*count);
+      for(const[k,v]of Object.entries(r.eq))eq[k]=(eq[k]||0)+v;
+      p+=r.p;
+    }
+  }
+  return{eq,p};
+}
+
+// ── HELPERS ──
+const lc=l=>LC[l]||'var(--green)';
+const lbl=l=>(l||'').toUpperCase();
+const fmt=n=>n>=1000?n.toLocaleString():String(n);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function eBar(eq,p){
+  let h='<div class="ebar">';
+  for(const[k,v]of Object.entries(eq)){
+    if(!v)continue;
+    h+=`<div class="echip"><span class="echip-k">${esc(k)}</span><span class="echip-v">${fmt(v)}</span></div>`;
+  }
+  if(p)h+=`<div class="echip pers"><span class="echip-k">Personnel</span><span class="echip-v">${fmt(p)}</span></div>`;
+  return h+'</div>';
+}
+
+function eSmall(eq,p){
+  let h='<div class="cequip">';
+  for(const[k,v]of Object.entries(eq)){
+    if(!v)continue;
+    h+=`<div class="cei">${esc(k)}<span>${fmt(v)}</span></div>`;
+  }
+  if(p)h+=`<div class="cpers">Personnel<span>${fmt(p)}</span></div>`;
+  return h+'</div>';
+}
+
+// ── RENDER ──
+function render(){
+  const f=stack[stack.length-1];
+  renderBC();
+  if(f.type==='home')renderHome();
+  else if(f.type==='army')renderArmy(f.aid);
+  else if(f.type==='unit')renderUnit(f.uid);
+  document.getElementById('main').scrollTop=0;
+  window.scrollTo(0,0);
+}
+
+function renderBC(){
+  let h='';
+  for(let i=0;i<stack.length;i++){
+    const f=stack[i],last=i===stack.length-1;
+    let lbl2='';
+    if(f.type==='home')lbl2='HOME';
+    else if(f.type==='army'){const a=ARMIES.find(x=>x.id===f.aid);lbl2=a?a.name.toUpperCase():f.aid}
+    else if(f.type==='unit'){const u=UNITS[f.uid];lbl2=u?u.name.toUpperCase():f.uid}
+    if(i>0)h+='<span class="crumb-sep">▸</span>';
+    h+=last?`<span class="crumb-cur">${esc(lbl2)}</span>`:`<span class="crumb" onclick="goTo(${i})">${esc(lbl2)}</span>`;
+  }
+  document.getElementById('breadcrumb').innerHTML=h;
+}
+
+function renderHome(){
+  let h=`<div class="ani">
+    <div class="htitle">Table of Organization and Equipment — Ground Forces</div>
+    <div class="hmain">UFRO</div>
+    <div class="hline">UNITED FEDERAL REPUBLICS OF OKRYIV // GROUND FORCES COMMAND</div>
+    <div class="slabel">Select Branch</div>`;
+  for(const a of ARMIES){
+    h+=`<div class="acard" style="--ac:${esc(a.color)}" onclick="nav({type:'army',aid:'${esc(a.id)}'})">
+      <div class="aname">${esc(a.name)}</div>
+      <div class="afull">${esc(a.fullName)}</div>
+      <div class="acmdr">Supreme Commander: ${esc(a.commander)}</div>
+      <div class="adesc">${esc(a.description)}</div>
+      <div class="astats">
+        <div><div class="asval">${fmt(a.personnel)}</div><div class="aslbl">Active Personnel</div></div>
+        <div><div class="asval">${a.divisions.length}</div><div class="aslbl">Divisions</div></div>
+      </div>
+      <div class="aarrow">▶</div>
+    </div>`;
+  }
+  h+='</div>';
+  document.getElementById('main').innerHTML=h;
+}
+
+function renderArmy(aid){
+  const a=ARMIES.find(x=>x.id===aid);
+  if(!a){document.getElementById('main').innerHTML='<p>Not found.</p>';return}
+  let h=`<div class="ani">
+    <div class="uhead" style="--lc:${esc(a.color)}">
+      <div class="uhead-top"><div>
+        <div class="uname">${esc(a.name)}</div>
+        <div class="unotes">${esc(a.description)}<br><span style="color:var(--amber)">Supreme Commander: ${esc(a.commander)}</span></div>
+      </div></div>
+      <div class="ebar">
+        <div class="echip pers"><span class="echip-k">Active Personnel</span><span class="echip-v">${fmt(a.personnel)}</span></div>
+        ${(()=>{
+          const divPers=a.divisions.reduce((s,id)=>{const r=agg(id);return s+r.p},0);
+          if(!divPers)return'';
+          const pct=Math.round(divPers/a.personnel*100);
+          return`<div class="echip pers"><span class="echip-k">In Divisions</span><span class="echip-v">${fmt(divPers)}</span></div>
+          <div class="echip"><span class="echip-k">Unassigned</span><span class="echip-v">${fmt(a.personnel-divPers)}</span></div>
+          <div class="echip"><span class="echip-k">Div Coverage</span><span class="echip-v">${pct}%</span></div>`;
+        })()}
+      </div>
+    </div>
+    <div class="slabel">Divisions — ${a.divisions.length} defined</div>
+    <div class="ugrid">`;
+  if(!a.divisions.length){
+    h+='<div class="empty">// No divisions defined yet — add IDs to ARMIES in urfo_units.js //</div>';
+  } else {
+    for(const id of a.divisions)h+=card(id,1,null);
+  }
+  h+='</div></div>';
+  document.getElementById('main').innerHTML=h;
+}
+
+function renderUnit(uid){
+  const u=UNITS[uid];
+  if(!u){document.getElementById('main').innerHTML='<p>Unit not found.</p>';return}
+  const r=agg(uid);
+  const c=lc(u.level);
+  let h=`<div class="ani">
+    <div class="uhead" style="--lc:${c}">
+      <div class="uhead-top">
+        <div class="lvl-badge">${lbl(u.level)}</div>
+        <div><div class="uname">${iconHTML(u)}${esc(u.name)}</div>${u.notes?`<div class="unotes">${esc(u.notes)}</div>`:''}</div>
+      </div>
+      ${eBar(r.eq,r.p)}
+    </div>`;
+
+  // Leaf: show table
+  if(u.equipment&&!u.composition){
+    h+=`<div class="slabel">Equipment</div>
+    <table class="etable"><tr><th>System</th><th style="text-align:right">Count</th></tr>`;
+    for(const[k,v]of Object.entries(u.equipment)){
+      h+=`<tr><td>${esc(k)}</td><td>${fmt(v)}</td></tr>`;
+    }
+    if(u.personnel){
+      h+=`<tr><td style="color:var(--amber)">Personnel</td><td style="color:var(--amber)">${fmt(u.personnel)}</td></tr>`;
+    }
+    h+='</table>';
+  }
+
+  // Non-leaf: show composition
+  if(u.composition){
+    h+=`<div class="slabel">Composition</div><div class="ugrid">`;
+    let prevLabel=null;
+    for(const child of u.composition){
+      if(child.label&&child.label!==prevLabel){
+        h+=`<div class="glabel">— ${esc(child.label)}</div>`;
+        prevLabel=child.label;
+      }
+      h+=card(child.id,child.count||1,child.label);
+    }
+    h+='</div>';
+  }
+
+  h+='</div>';
+  document.getElementById('main').innerHTML=h;
+}
+
+function card(uid,count,grpLabel){
+  const u=UNITS[uid];
+  if(!u)return`<div class="ucard cmissing" style="--lc:var(--red)"><div class="cname">⚠ Missing: ${esc(uid)}</div><div style="font-size:10px;color:var(--red);margin-top:5px">Not defined in urfo_units.js</div></div>`;
+  const r=agg(uid,count);
+  const c=lc(u.level);
+  return`<div class="ucard" style="--lc:${c}" onclick="nav({type:'unit',uid:'${esc(uid)}'})">
+    <div class="ctop">
+      <div class="cbadge">${lbl(u.level)}</div>
+      ${count>1?`<div class="ccnt">×${count}</div>`:''}
+    </div>
+    <div class="cname">${iconHTML(u)}${esc(u.name)}</div>
+    ${eSmall(r.eq,r.p)}
+  </div>`;
+}
+
+// ── CLOCK ──
+function tick() {
+  const n = new Date();
+
+  const time = n.toLocaleTimeString('fr-FR', {
+    timeZone: 'Europe/Paris',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+
+  const date = n.toLocaleDateString('fr-FR', {
+    timeZone: 'Europe/Paris'
+  });
+
+  document.getElementById('clock').textContent =
+    `Okryiv National Time ${time} // ${date}`;
+}
+
+setInterval(tick, 1000);
+tick();
+
+// ── BOOT ──
+render();
+</script>
+</body>
+</html>
