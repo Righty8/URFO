@@ -44,7 +44,6 @@
  *   standard, recon, arty, ad, engineer, logistics, command, hostile
  *   (or use any CSS color string: "#3af0f0", "tomato", etc.)
  *
- * To add a new icon: edit the ICONS dict in URFO_TOandE.html.
  */
 const UNITS = {
 
@@ -57,7 +56,7 @@ const UNITS = {
     name: "Tank Platoon",
     level: "platoon",
     type: "tank",
-    notes: "4 MBT + 4 LBM-10 scout cars. The LBM-10 gunner assists tank crews with maintenance when not in combat, giving 4 people working each tank instead of 3. MBT is any K-84 variant, Okryiv also has K-95B3 and Orvask has K-74",
+    notes: "4 MBT + 4 LBM-10 scout cars. The LBM-10 crew assists tank crews with maintenance when not in combat, giving 4 people working each tank instead of 3. MBT is any K-84 variant, Okryiv also has K-95B3 and Orvask has K-74",
     equipment: {
       "MBT": 4,
       "LBM-10": 4
@@ -96,7 +95,7 @@ const UNITS = {
     name: "BTR-K84 Platoon",
     level: "platoon",
     type: "ifv_heavy",
-    notes: "BTR-K84 heavy APCs on K-84 hull. 30mm cannon + twin ATGMs. Unmanned turret, carries 5 infantry. Built from phased-out K-84BM/EM hulls.",
+    notes: "BTR-K84 heavy APCs on K-84 hull. 30mm cannon + twin ATGMs. Unmanned turret, carries 5 infantry. Built from phased-out K-84BM/EM hulls. 1x Ldr, 1x MG, 1x MG assistant, 1 Radio-Rifleman, 1x TRM/sniper       (4x AN-94, 1x MMG, 4x disposable AT launcher, 3x disposable Termobaric launcher/sniper)",
     equipment: {
       "BTR-K84": 4,
       "Infantry": 20
@@ -122,7 +121,7 @@ const UNITS = {
     name: "BMP-K84 Platoon",
     level: "platoon",
     type: "ifv_heavy",
-    notes: "BMP-K84 heavy IFVs on K-84 hull. 57mm + twin top-attack ATGMs. Unmanned turret, carries 5 infantry. Built from phased-out K-84BM/EM hulls.",
+    notes: "BMP-K84 heavy IFVs on K-84 hull. 57mm + twin top-attack ATGMs. Unmanned turret, carries 5 infantry. Built from phased-out K-84BM/EM hulls. 1x Ldr, 1x MG, 1x MG assistant, 1 Radio-Rifleman, 1x TRM/sniper      (4x AN-94, 1x MMG, 4x disposable AT launcher, 3x disposable Termobaric launcher/sniper)",
     equipment: {
       "BMP-K84": 4,
       "Infantry": 20
@@ -189,7 +188,7 @@ const UNITS = {
     name: "BMP-5L Platoon",
     level: "platoon",
     type: "ifv_tracked",
-    notes: "BMP-5L IFV. 30mm cannon + twin ATGMs. Unmanned turret, carries 6 infantry.",
+    notes: "BMP-5L IFV. 30mm cannon + twin ATGMs. Unmanned turret, carries 6 infantry.1x Ldr, 1x MG, 1x MG assistant, 1 Radio-Rifleman, 1x AT, 1x AT assistant      (5x AN-94, 1x MMG, 6x AT launcher, 3x disposable Termobaric launcher)",
     equipment: {
       "BMP-5L": 3,
       "Infantry": 18
@@ -266,7 +265,7 @@ const UNITS = {
     name: "DAR-90 Platoon",
     level: "platoon",
     type: "apc_wheeled",
-    notes: "DAR-90 APC. 30mm cannon. Manned turret, carries 8 infantry.",
+    notes: "DAR-90 APC. 30mm cannon. Manned turret, carries 8 infantry. 1x Ldr, 2x MG, 1x MG assistant, 1 Radio-Rifleman, 1x AT, 1 AT assistant, 1x TRM/sniper  (6x AN-94, 2x MMG, 6x AT launcher, 3x disposable Termobaric launcher/sniper)",
     equipment: {
       "DAR-90": 3,
       "Infantry": 24
@@ -308,7 +307,7 @@ const UNITS = {
     level: "platoon",
     type: "ifv_wheeled",
     iconColor: "recon",
-    notes: "2 KBM-90 Rys' + 2 Bumerang IFV with 4-men scout teams.",
+    notes: "2 KBM-90 Rys' + 2 Bumerang IFV with 4-men scout teams. 1x Ldr, 1 Radio-Rifleman, 1x AT, 1x Sniper         (3x AN-94, 5x disposable AT launcher, Sniper)",
     equipment: {
       "KBM-90 Rys": 2,
       "Bumerang": 2,
@@ -531,15 +530,94 @@ const UNITS = {
     personnel: 20
   },
 
-  "plt_reg_hq": {
-    name: "Regimental HQ",
+  "plt_div_cmd": {
+    name: "Division Commander",
     level: "platoon",
     type: "hq",
-    notes: "Regimental command. 1 Typhoon-U + staff vehicles.",
+    color:"command",
+    notes: "Division commander. 1 Typhoon-K command vehicle and 30 personnel.",
     equipment: {
-      "Typhoon-U": 1
+      "Typhoon-K": 1,
+      "Typhoon-U": 2,
+      "Support": 30
     },
-    personnel: 30
+    personnel: 36
+  },
+
+  "coy_signal": {
+    name: "Signals Company",
+    level: "company",
+    type: "signal",
+    notes: "Signals & Communications company. 5 Typhoon-U communication trucks and 80 personnel.",
+    equipment: {
+      "Typhoon-U": 5,
+      "Support": 80
+    },
+    personnel: 90
+  },
+
+  "coy_engineers": {
+    name: "Engineer Company",
+    level: "company",
+    type: "engineers_vehicle",
+    notes: "Engineers company. 6 BAT-K84 armoured recovery vehicle, 1 Typhoon-U truck and 200 personnel.",
+    equipment: {
+      "BAT-K84": 6,
+      "Typhoon-U": 1,
+      "Support": 200
+    },
+    personnel: 226
+  },
+
+  "coy_logistics": {
+    name: "Logistics Company",
+    level: "company",
+    type: "logistics",
+    notes: "Logistics company. 10 KRaZ-255B supply trucks, 5 Typhoon-U and 310 personnel.",
+    equipment: {
+      "KRaZ-255B": 10,
+      "Typhoon-U": 5,
+      "Support": 310
+    },
+    personnel: 340
+  },
+
+  "coy_medical_armored": {
+    name: "Armored Company",
+    level: "company",
+    type: "medical",
+    notes: "Medical company. 6 unarmed medical Bumerang, 1 Typhoon-U and 60 personnel.",
+    equipment: {
+      "Bumerang": 6,
+      "Typhoon-U": 1,
+      "Support": 60
+    },
+    personnel: 92
+  },
+
+  "coy_medical_rear": {
+    name: "Rear Company",
+    level: "company",
+    type: "medical",
+    notes: "Medical company. 10 Typhoon-U medical trucks and 140 personnel.",
+    equipment: {
+      "Typhoon-U": 10,
+      "Support": 140
+    },
+    personnel: 160
+  },
+
+  "coy_mp": {
+    name: "MP Company",
+    level: "company",
+    type: "logistics",
+    notes: "Military Police company. 10 Bulat MP APC, 1 Typhoon-U and 60 personnel.",
+    equipment: {
+      "Bulat MP": 10,
+      "Typhoon-U": 1,
+      "Support": 60
+    },
+    personnel: 112
   },
 
 
@@ -783,7 +861,7 @@ const UNITS = {
     name: "DAR-90 Battalion",
     level: "battalion",
     type: "apc_wheeled",
-    notes: "3 APC companies (32 DAR-90) + HQ. Core combat unit of the infantry regiment, trades firepower for speed.",
+    notes: "3 APC companies (30 DAR-90) + HQ. Core combat unit of the infantry regiment, trades firepower for speed.",
     composition: [
       { id: "btn_dar90_hq", count: 1, label: "Command Platoon" },
       { id: "coy_dar90",   count: 1, label: "Manoeuvre Companies" },
@@ -887,6 +965,52 @@ const UNITS = {
     ]
   },
 
+  "bat_cmd_element": {
+    name: "Command Element",
+    level: "battalion",
+    type: "hq",
+    iconColor: "command",
+    notes: "Division commander and accompanying personnel, includes Signal Company.",
+    composition: [
+      { id: "plt_div_cmd", count: 1},
+      { id: "coy_signal", count: 1}
+    ]
+  },
+
+  "bat_engineer_logistics": {
+    name: "Logistics/Engineer Battalion",
+    level: "battalion",
+    type: "engineers_vehicle",
+    iconColor: "engineer",
+    notes: "Logistics and Engineer companies. Includes BAT-K84 armored recovery vehicle and 10 logistics truck.",
+    composition: [
+      { id: "coy_engineers", count: 1},
+      { id: "coy_logistics", count: 1}
+    ]
+  },
+
+  "bat_medical": {
+    name: "Medical Battalion",
+    level: "battalion",
+    type: "medical",
+    iconColor: "engineer",
+    notes: "Front and rear medical companies. Includes unarmed medical Bumerang and 10 medical Typhoon-U trucks.",
+    composition: [
+      { id: "coy_medical_armored", count: 1},
+      { id: "coy_medical_rear", count: 1}
+    ]
+  },
+
+  "bat_military_police": {
+    name: "MP Battalion",
+    level: "battalion",
+    type: "mp",
+    notes: "Military Police company. Includes Bulat MP APC.",
+    composition: [
+      { id: "coy_mp", count: 1}
+    ]
+  },
+
 
   // ════════════════════════════════════════════════════════════
   //  R E G I M E N T S
@@ -932,18 +1056,43 @@ const UNITS = {
     name: "Armoured Division",
     level: "division",
     type: "tank",
-    notes: "Federal Army heavy strike division. Expeditionary — fights outside Okryiv. 4× C/S armoured regiments, organic fire support and recon. ~14,500 personnel.",
+    notes: "Federal Army heavy tank division. Expeditionary. 3× tank regiments and 1 mechanized infantry regiment, organic fire support and recon. 15,332 personnel.",
     composition: [
       { id: "reg_tank", count: 1, label: "Combat Regiments" },
       { id: "reg_tank", count: 1, label: "Combat Regiments" },
       { id: "reg_tank", count: 1, label: "Combat Regiments" },
       { id: "reg_mech_inf", count: 1, label: "Combat Regiments" },
-      // Mech Infantry Regiment — add when defined
       { id: "bat_mrtr",  count: 1, label: "Fire Support" },
       { id: "bat_spg",  count: 1, label: "Fire Support" },
       { id: "bat_mlrs",  count: 1, label: "Fire Support" },
       { id: "bat_ad",    count: 1, label: "Fire Support" },
-      { id: "bat_recon", count: 1, label: "Recon Battalion" }
+      { id: "bat_recon", count: 1, label: "Recon Battalion" },
+      { id: "bat_cmd_element", count: 1, label: "Support Battalions" },
+      { id: "bat_engineer_logistics", count: 1, label: "Support Battalions" },
+      { id: "bat_medical", count: 1, label: "Support Battalions" },
+      { id: "bat_military_police", count: 1, label: "Support Battalions" }
+    ]
+  },
+
+  "div_mech_inf": {
+    name: "Mechanized Infantry Division",
+    level: "division",
+    type: "ifv_tracked",
+    notes: "Federal Army heavy mechanized division. Expeditionary. 3× mechanized infantry regiments and 1 tank regiment, organic fire support and recon. 15,332 personnel.",
+    composition: [
+      { id: "reg_mech_inf", count: 1, label: "Combat Regiments" },
+      { id: "reg_mech_inf", count: 1, label: "Combat Regiments" },
+      { id: "reg_mech_inf", count: 1, label: "Combat Regiments" },
+      { id: "reg_tank", count: 1, label: "Combat Regiments" },
+      { id: "bat_mrtr",  count: 1, label: "Fire Support" },
+      { id: "bat_spg",  count: 1, label: "Fire Support" },
+      { id: "bat_mlrs",  count: 1, label: "Fire Support" },
+      { id: "bat_ad",    count: 1, label: "Fire Support" },
+      { id: "bat_recon", count: 1, label: "Recon Battalion" },
+      { id: "bat_cmd_element", count: 1, label: "Support Battalions" },
+      { id: "bat_engineer_logistics", count: 1, label: "Support Battalions" },
+      { id: "bat_medical", count: 1, label: "Support Battalions" },
+      { id: "bat_military_police", count: 1, label: "Support Battalions" }
     ]
   }
 
@@ -965,8 +1114,8 @@ const ARMIES = [
     color: "#ff9f1c",
     description: "Expeditionary force. Fights outside Okryiv. Modern equipment, combined-arms doctrine.",
     divisions: [
-      "div_armored"
-      // add more division IDs here as you define them
+      "div_armored",
+      "div_mech_inf"
     ]
   },
   {
@@ -978,7 +1127,6 @@ const ARMIES = [
     color: "#4af0ff",
     description: "Territorial defence. Never leaves Okryiv. Terrain-specialised divisions (Mountain, Mech, Arctic).",
     divisions: [
-      // add NG division IDs here as you define them
     ]
   }
 ];
