@@ -965,9 +965,6 @@ const ARMIES = [
     color: "#ff9f1c",
     description: "Expeditionary force. Fights outside Okryiv. Modern equipment, combined-arms doctrine.",
     divisions: [
-      "div_armored",
-      "div_armored",
-      "div_armored",
       "div_armored"
       // add more division IDs here as you define them
     ]
