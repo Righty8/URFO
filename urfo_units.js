@@ -1097,8 +1097,8 @@ const ARMIES = [
     color: "#ff9f1c",
     description: "Expeditionary force. Fights outside Okryiv. Modern equipment, combined-arms doctrine.",
     divisions: [
-      "div_armored",
-      "div_mech_inf"
+      { id: "div_armored", count: 1, label: "Tank Divisions" },
+      { id: "div_mech_inf", count: 1, label: "Mechanized Infantry Divisions" }
     ]
   },
   {
