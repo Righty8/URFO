@@ -33,7 +33,7 @@
  *
  * Available types:
  *   infantry,  tank,
- *   ifv_tracked, ifv_heavy, ifv_wheeled,
+ *   ifv_tracked, ifv_tracked, ifv_wheeled,
  *   apc_tracked, apc_wheeled,
  *   car, truck,
  *   artillery, spg, mortar, mlrs, atgm,
@@ -77,7 +77,7 @@ const UNITS = {
     personnel: 8
   },
 
-  "btn_tank_hq": {
+  "bat_tank_hq": {
     name: "Tank Battalion HQ",
     level: "platoon",
     type: "cmd_tank",
@@ -94,7 +94,7 @@ const UNITS = {
   "plt_btr_k84": {
     name: "BTR-K84 Platoon",
     level: "platoon",
-    type: "ifv_heavy",
+    type: "ifv_tracked",
     notes: "BTR-K84 heavy APCs on K-84 hull. 30mm cannon + twin ATGMs. Unmanned turret, carries 5 infantry. Built from phased-out K-84BM/EM hulls. 1x Ldr, 1x MG, 1x MG assistant, 1 Radio-Rifleman, 1x TRM/sniper       (4x AN-94, 1x MMG, 4x disposable AT launcher, 3x disposable Termobaric launcher/sniper)",
     equipment: {
       "BTR-K84": 4,
@@ -106,8 +106,7 @@ const UNITS = {
   "plt_btr_k84_hq": {
     name: "BTR-K84 Company HQ",
     level: "platoon",
-    type: "ifv_heavy",
-    iconColor: "command",
+    type: "cmd_ifv_tracked",
     notes: "Company command element. Command BTR-K84, command infantry and logistics KRaZ-255B.",
     equipment: {
       "BTR-K84": 1,
@@ -120,7 +119,7 @@ const UNITS = {
   "plt_bmp_k84": {
     name: "BMP-K84 Platoon",
     level: "platoon",
-    type: "ifv_heavy",
+    type: "ifv_tracked",
     notes: "BMP-K84 heavy IFVs on K-84 hull. 57mm + twin top-attack ATGMs. Unmanned turret, carries 5 infantry. Built from phased-out K-84BM/EM hulls. 1x Ldr, 1x MG, 1x MG assistant, 1 Radio-Rifleman, 1x TRM/sniper      (4x AN-94, 1x MMG, 4x disposable AT launcher, 3x disposable Termobaric launcher/sniper)",
     equipment: {
       "BMP-K84": 4,
@@ -132,8 +131,7 @@ const UNITS = {
   "plt_bmp_k84_hq": {
     name: "BMP-K84 Company HQ",
     level: "platoon",
-    type: "ifv_heavy",
-    iconColor: "command",
+    type: "cmd_ifv_tracked",
     notes: "Company command element. Command BMP-K84, command infantry and logistics KRaZ-255B.",
     equipment: {
       "BMP-K84": 1,
@@ -143,10 +141,24 @@ const UNITS = {
     personnel: 10
   },
 
-  "btn_heavy_mech_hq": {
+  "plt_weapons": {
+  name: "Weapons Platoon",
+  level: "platoon",
+  type: "fire_support",
+  notes: "Company fire support element. 2× HMG teams (12.7mm, tripod-mounted), 2× AGL teams, 2× 82mm mortar teams. Each team on a Tigr. Provides sustained direct suppression (HMG), indirect area suppression (AGL), and immediate close indirect fire (mortar) to dismounted infantry. Sets up in a fire support position while maneuver platoons close with the enemy.",
+  equipment: {
+    "Tigr": 7,
+    "HMG": 2,
+    "AGL": 2,
+    "82mm Mortar": 2
+  },
+  personnel: 22  // 2×2 HMG + 2×3 AGL + 2×4 mortar + 2 plt HQ
+},
+
+  "bat_heavy_mech_hq": {
     name: "Heavy Mechanized Battalion HQ",
     level: "platoon",
-    type: "cmd_ifv_heavy",
+    type: "cmd_ifv_tracked",
     notes: "Heavy Mechanized battalion command element. 2 Typhoon-U command trucks and mixed platoon of HIFV with infantry. 250 support personnel.",
     equipment: {
       "BTR-K84": 1,
@@ -167,21 +179,21 @@ const UNITS = {
       "MBT": 3,
       "LBM-10": 3,
       "Typhoon-U": 1,
-      "Support": 1000
+      "Support": 500
     },
-    personnel: 1020
+    personnel: 520
   },
 
   "reg_mech_inf_hq": {
     name: "Mechanized Infantry Regimental HQ",
     level: "platoon",
-    type: "ifv_tracked",
+    type: "cmd_ifv_tracked",
     notes: "Regimental command.",
     equipment: {
       "Typhoon-U": 3,
-      "Support": 1000
+      "Support": 500
     },
-    personnel: 1012
+    personnel: 512
   },
 
   "plt_bmp_5l": {
@@ -199,8 +211,7 @@ const UNITS = {
   "plt_bmp_5l_hq": {
     name: "BMP-5L Company HQ",
     level: "platoon",
-    type: "ifv_tracked",
-    iconColor: "command",
+    type: "cmd_ifv_tracked",
     notes: "Company command element. Command BMP-5L, command infantry and logistics KRaZ-255B.",
     equipment: {
       "BMP-5L": 1,
@@ -210,10 +221,10 @@ const UNITS = {
     personnel: 11   // 4 × 3 crew + 15 infantry
   },
 
-  "btn_bmp_5l_hq": {
+  "bat_bmp_5l_hq": {
     name: "BMP-5L Battalion HQ",
     level: "platoon",
-    type: "cmd_tank",
+    type: "cmd_ifv_tracked",
     notes: "IFV battalion command element. 2 Typhoon-U command trucks and 2 IFVs. 250 support personnel.",
     equipment: {
       "BMP-5L": 2,
@@ -228,7 +239,7 @@ const UNITS = {
     name: "ATGM Platoon",
     level: "platoon",
     type: "atgm",
-    notes: "4 Tigr with 8 ATGMs. 3 dismounted ATGM teams (3) in a Tigr each.",
+    notes: "4 Tigr with 8 ATGMs. 3 dismounted ATGM teams (3 operators) in a Tigr each.",
     equipment: {
       "Tigr Kornet-D": 4,
       "Tigr": 3,
@@ -240,9 +251,8 @@ const UNITS = {
   "plt_manpads": {
     name: "MANPADS Platoon",
     level: "platoon",
-    type: "missile_ad",
-    iconColor: "ad",
-    notes: "3 dismounted MANPADS teams (2) in a Tigr each.",
+    type: "manpads",
+    notes: "3 dismounted MANPADS teams (2 operators) in a Tigr each.",
     equipment: {
       "Tigr": 3,
       "MANPADS Team": 3
@@ -253,7 +263,7 @@ const UNITS = {
   "bat_support_hq": {
     name: "Support Battalion HQ",
     level: "platoon",
-    type: "truck",
+    type: "hq",
     notes: "Support battalion command element. 50 support personnel.",
     equipment: {
       "Support": 50
@@ -264,7 +274,7 @@ const UNITS = {
   "plt_dar90": {
     name: "DAR-90 Platoon",
     level: "platoon",
-    type: "apc_wheeled",
+    type: "ifv_wheeled",
     notes: "DAR-90 APC. 30mm cannon. Manned turret, carries 8 infantry. 1x Ldr, 2x MG, 1x MG assistant, 1 Radio-Rifleman, 1x AT, 1 AT assistant, 1x TRM/sniper  (6x AN-94, 2x MMG, 6x AT launcher, 3x disposable Termobaric launcher/sniper)",
     equipment: {
       "DAR-90": 3,
@@ -276,8 +286,7 @@ const UNITS = {
   "plt_dar90_hq": {
     name: "DAR-90 Company HQ",
     level: "platoon",
-    type: "apc_wheeled",
-    iconColor: "command",
+    type: "cmd_ifv_wheeled",
     notes: "Company command element. Command DAR-90, command infantry and logistics KRaZ-255B.",
     equipment: {
       "DAR-90": 1,
@@ -287,11 +296,10 @@ const UNITS = {
     personnel: 13   // 3 crew + 8 infantry + 2 truckers
   },
 
-  "btn_dar90_hq": {
+  "bat_dar90_hq": {
     name: "DAR-90 Battalion HQ",
     level: "platoon",
-    type: "apc_wheeled",
-    iconColor: "command",
+    type: "cmd_ifv_wheeled",
     notes: "APC battalion command element. 2 Typhoon-U command trucks and 2 APCs. 250 support personnel.",
     equipment: {
       "DAR-90": 2,
@@ -305,8 +313,7 @@ const UNITS = {
   "plt_recon": {
     name: "Recon Platoon",
     level: "platoon",
-    type: "ifv_wheeled",
-    iconColor: "recon",
+    type: "recon_ifv_wheeled",
     notes: "2 KBM-90 Rys' + 2 Bumerang IFV with 4-men scout teams. 1x Ldr, 1 Radio-Rifleman, 1x AT, 1x Sniper         (3x AN-94, 5x disposable AT launcher, Sniper)",
     equipment: {
       "KBM-90 Rys": 2,
@@ -319,8 +326,7 @@ const UNITS = {
   "plt_recon_hq": {
     name: "Recon Company HQ",
     level: "platoon",
-    type: "recon",
-    iconColor: "command",
+    type: "recon_ifv_wheeled",
     notes: "Company command. 1 Bumerang + Typhoon-U.",
     equipment: {
       "Bumerang": 1,
@@ -329,11 +335,10 @@ const UNITS = {
     personnel: 7 // 3 crew + 4 scouts
   },
 
-  "btn_recon_hq": {
+  "bat_recon_hq": {
     name: "Recon Battalion HQ",
     level: "platoon",
-    type: "recon",
-    iconColor: "command",
+    type: "recon_ifv_wheeled",
     notes: "Recon battalion command element. 1 Bumerang and 1 KRaZ-255B supply truck. 75 support personnel.",
     equipment: {
       "Bumerang": 1,
@@ -347,7 +352,6 @@ const UNITS = {
     name: "SPG Platoon",
     level: "platoon",
     type: "spg",
-    iconColor: "arty",
     notes: "3 × 2S19/M SPG. 152mm, fully autoloaded, 4 crew each.",
     equipment: {
       "2S19/M SPG": 3
@@ -358,8 +362,7 @@ const UNITS = {
   "plt_spg_hq": {
     name: "SPG Battery HQ",
     level: "platoon",
-    type: "spg",
-    iconColor: "arty",
+    type: "cmd_truck",
     notes: "Battery command. 2 Typhoon-U trucks equipped with artillery calculators. 50 support personnel.",
     equipment: {
       "Typhoon-U": 2,
@@ -371,7 +374,7 @@ const UNITS = {
   "bat_spg_hq": {
     name: "SPG Battalion HQ",
     level: "platoon",
-    type: "hq",
+    type: "cmd_truck",
     notes: "Battalion command. 1 Typhoon-U, 6 KRaZ-255B supply trucks and 100 support personnel.",
     equipment: {
       "Typhoon-U": 1,
@@ -384,9 +387,8 @@ const UNITS = {
   "plt_mrtr": {
     name: "Mortar Platoon",
     level: "platoon",
-    type: "spg",
-    iconColor: "arty",
-    notes: "3 × 2S19/M SPG. 152mm, fully autoloaded, 4 crew each.",
+    type: "mortar_wheeled",
+    notes: "3 × DAR-90 wheeled mortar carrier. 120mm, 4 crew each.",
     equipment: {
       "DAR-90 Mortar": 3
     },
@@ -396,8 +398,7 @@ const UNITS = {
   "plt_mrtr_hq": {
     name: "Mortar Battery HQ",
     level: "platoon",
-    type: "spg",
-    iconColor: "arty",
+    type: "cmd_truck",
     notes: "Battery command. 2 Typhoon-U trucks. 50 support personnel.",
     equipment: {
       "Typhoon-U": 2,
@@ -409,7 +410,7 @@ const UNITS = {
   "bat_mrtr_hq": {
     name: "Mortar Battalion HQ",
     level: "platoon",
-    type: "hq",
+    type: "cmd_truck",
     notes: "Battalion command. 1 Typhoon-U, 6 KRaZ-255B supply trucks and 100 support personnel.",
     equipment: {
       "Typhoon-U": 1,
@@ -423,7 +424,6 @@ const UNITS = {
     name: "MLRS Platoon",
     level: "platoon",
     type: "mlrs",
-    iconColor: "arty",
     notes: "2x Bulat MLRS, 14x rockets each, 4 crew each.",
     equipment: {
       "Bulat MLRS": 2
@@ -434,8 +434,7 @@ const UNITS = {
   "plt_mlrs_hq": {
     name: "MLRS Battery HQ",
     level: "platoon",
-    type: "mlrs",
-    iconColor: "arty",
+    type: "cmd_truck",
     notes: "Battery command. 2 Typhoon-U trucks. 50 support personnel.",
     equipment: {
       "Typhoon-U": 2,
@@ -445,9 +444,9 @@ const UNITS = {
   },
 
   "bat_mlrs_hq": {
-    name: "Mortar Battalion HQ",
+    name: "MLRS Battalion HQ",
     level: "platoon",
-    type: "hq",
+    type: "cmd_truck",
     notes: "Battalion command. 1 Typhoon-U, 6 KRaZ-255B supply trucks and 100 support personnel.",
     equipment: {
       "Typhoon-U": 1,
@@ -461,8 +460,7 @@ const UNITS = {
     name: "SHORAD Platoon",
     level: "platoon",
     type: "aaa_tracked",
-    iconColor: "ad",
-    notes: "3 × DK-12 Tunguska. Short-range air defence. Follows frontline units.",
+    notes: "3 × DK-12 Tunguska. Short-range air defence, equipped with 4x 30mm guns and anti-air missiles, follows frontline units.",
     equipment: {
       "DK-12 Tunguska": 3
     },
@@ -473,7 +471,6 @@ const UNITS = {
     name: "MRAD Platoon",
     level: "platoon",
     type: "missile_ad",
-    iconColor: "ad",
     notes: "2 × DK-58 Vityaz. Medium-range SAM. Self-contained TELAR with integrated radar.",
     equipment: {
       "DK-58 Vityaz": 2
@@ -485,7 +482,6 @@ const UNITS = {
     name: "LRAD Platoon",
     level: "platoon",
     type: "missile_ad",
-    iconColor: "ad",
     notes: "2 × DK-56 Rubezh. Long-range tracked SAM system. Area denial.",
     equipment: {
       "DK-56 Rubezh": 2
@@ -496,8 +492,7 @@ const UNITS = {
   "plt_ad_hq": {
     name: "Air Defense Battery HQ",
     level: "platoon",
-    type: "truck",
-    iconColor: "ad",
+    type: "cmd_truck",
     notes: "Company command. 2 Typhoon-U and 50 support personnel.",
     equipment: {
       "Typhoon-U": 2,
@@ -509,7 +504,7 @@ const UNITS = {
   "plt_ad_bat_hq": {
     name: "AD Battalion HQ",
     level: "platoon",
-    type: "hq",
+    type: "cmd_truck",
     notes: "Standard battalion command element. 2 Typhoon-U command trucks and 6 KRaZ-255B supply trucks, 100 support personnel.",
     equipment: {
       "Typhoon-U": 1,
@@ -533,9 +528,8 @@ const UNITS = {
   "plt_div_cmd": {
     name: "Division Commander",
     level: "platoon",
-    type: "hq",
-    color:"command",
-    notes: "Division commander. 1 Typhoon-K command vehicle and 30 personnel.",
+    type: "cmd_truck",
+    notes: "Division commander. 1 Typhoon-K command truck, 2 Typhoon-U trucks and 30 personnel.",
     equipment: {
       "Typhoon-K": 1,
       "Typhoon-U": 2,
@@ -559,7 +553,7 @@ const UNITS = {
   "coy_engineers": {
     name: "Engineer Company",
     level: "company",
-    type: "engineers_vehicle",
+    type: "engineering_vehicle",
     notes: "Engineers company. 6 BAT-K84 armoured recovery vehicle, 1 Typhoon-U truck and 200 personnel.",
     equipment: {
       "BAT-K84": 6,
@@ -572,7 +566,7 @@ const UNITS = {
   "coy_logistics": {
     name: "Logistics Company",
     level: "company",
-    type: "logistics",
+    type: "truck",
     notes: "Logistics company. 10 KRaZ-255B supply trucks, 5 Typhoon-U and 310 personnel.",
     equipment: {
       "KRaZ-255B": 10,
@@ -585,7 +579,7 @@ const UNITS = {
   "coy_medical_armored": {
     name: "Armored Company",
     level: "company",
-    type: "medical",
+    type: "apc_wheeled",
     notes: "Medical company. 6 unarmed medical Bumerang, 1 Typhoon-U and 60 personnel.",
     equipment: {
       "Bumerang": 6,
@@ -608,9 +602,9 @@ const UNITS = {
   },
 
   "coy_mp": {
-    name: "MP Company",
+    name: "Military Police Company",
     level: "company",
-    type: "logistics",
+    type: "military_police",
     notes: "Military Police company. 10 Bulat MP APC, 1 Typhoon-U and 60 personnel.",
     equipment: {
       "Bulat MP": 10,
@@ -642,26 +636,28 @@ const UNITS = {
   "coy_btr_k84": {
     name: "BTR-K84 Company",
     level: "company",
-    type: "ifv_heavy",
+    type: "ifv_tracked",
     notes: "3 platoons of BTR-K84 heavy IFVs + HQ. Close infantry support alongside MBTs.",
     composition: [
       { id: "plt_btr_k84_hq", count: 1, label: "Command Platoon"  },
       { id: "plt_btr_k84",  count: 1, label: "Manoeuvre Platoons" },
       { id: "plt_btr_k84",  count: 1, label: "Manoeuvre Platoons" },
-      { id: "plt_btr_k84",  count: 1, label: "Manoeuvre Platoons" }
+      { id: "plt_btr_k84",  count: 1, label: "Manoeuvre Platoons" },
+      { id: "plt_weapons", count: 1, label: "Weapons Platoon" }
     ]
   },
 
   "coy_bmp_k84": {
     name: "BMP-K84 Company",
     level: "company",
-    type: "ifv_heavy",
+    type: "ifv_tracked",
     notes: "3 platoons of BMP-K84 heavy IFVs + HQ. Focus on AT, but can also engage air targets with Timed Fused shells.",
     composition: [
       { id: "plt_bmp_k84_hq", count: 1, label: "Command Platoon"  },
       { id: "plt_bmp_k84",  count: 1, label: "Manoeuvre Platoons" },
       { id: "plt_bmp_k84",  count: 1, label: "Manoeuvre Platoons" },
-      { id: "plt_bmp_k84",  count: 1, label: "Manoeuvre Platoons" }
+      { id: "plt_bmp_k84",  count: 1, label: "Manoeuvre Platoons" },
+      { id: "plt_weapons", count: 1, label: "Weapons Platoon" }
     ]
   },
 
@@ -674,20 +670,22 @@ const UNITS = {
       { id: "plt_bmp_5l_hq", count: 1, label: "Command Platoon" },
       { id: "plt_bmp_5l",  count: 1, label: "Manoeuvre Platoons" },
       { id: "plt_bmp_5l",  count: 1, label: "Manoeuvre Platoons" },
-      { id: "plt_bmp_5l",  count: 1, label: "Manoeuvre Platoons" }
+      { id: "plt_bmp_5l",  count: 1, label: "Manoeuvre Platoons" },
+      { id: "plt_weapons", count: 1, label: "Weapons Platoon" }
     ]
   },
 
   "coy_dar90": {
     name: "DAR-90 Company",
     level: "company",
-    type: "apc_wheeled",
+    type: "ifv_wheeled",
     notes: "3 platoons of DAR-90 APCs + HQ.",
     composition: [
       { id: "plt_dar90_hq", count: 1, label: "Command Platoon" },
       { id: "plt_dar90",  count: 1, label: "Manoeuvre Platoons" },
       { id: "plt_dar90",  count: 1, label: "Manoeuvre Platoons" },
-      { id: "plt_dar90",  count: 1, label: "Manoeuvre Platoons" }
+      { id: "plt_dar90",  count: 1, label: "Manoeuvre Platoons" },
+      { id: "plt_weapons", count: 1, label: "Weapons Platoon" }
     ]
   },
 
@@ -718,8 +716,7 @@ const UNITS = {
   "coy_recon": {
     name: "Recon Company",
     level: "company",
-    type: "ifv_wheeled",
-    iconColor: "recon",
+    type: "recon_ifv_wheeled",
     notes: "3 recon platoons. 6 Rys' + 7 Bumerang. Covers a wide frontage.",
     composition: [
       { id: "plt_recon_hq", count: 1, label: "Command Platoon" },
@@ -732,8 +729,7 @@ const UNITS = {
   "coy_spg_battery": {
     name: "SPG Battery",
     level: "company",
-    type: "mortar",
-    iconColor: "arty",
+    type: "spg",
     notes: "3 platoons of 2S19/M (9 guns) + HQ platoon.",
     composition: [
       { id: "plt_spg_hq", count: 1, label: "Command Platoon" },
@@ -746,8 +742,7 @@ const UNITS = {
   "coy_mrtr_battery": {
     name: "Mortar Battery",
     level: "company",
-    type: "mortar",
-    iconColor: "arty",
+    type: "mortar_wheeled",
     notes: "3 platoons of DAR-90 Mortar (9 guns) and HQ platoon.",
     composition: [
       { id: "plt_mrtr_hq", count: 1, label: "Command Platoon" },
@@ -761,7 +756,6 @@ const UNITS = {
     name: "MLRS Battery",
     level: "company",
     type: "mlrs",
-    iconColor: "arty",
     notes: "3 platoons of Bulat MLRS (6 Salovs) and HQ platoon.",
     composition: [
       { id: "plt_mlrs_hq", count: 1, label: "Command Platoon" },
@@ -775,8 +769,7 @@ const UNITS = {
     name: "SHORAD Battery",
     level: "company",
     type: "aaa_tracked",
-    iconColor: "ad",
-    notes: "4 platoons of DK-12 Tunguska (12 vehicles). Short-range air defence, attached to frontline regiments.",
+    notes: "4 platoons of DK-12 Tunguska (12 vehicles). Short-range air defence, equipped with 4x 30mm guns and anti-air missiles, attached to frontline regiments.",
     composition: [
       { id: "plt_ad_hq", count: 1, label: "Command Platoon" },
       { id: "plt_dk12", count: 1, label: "SHORAD Platoons" },
@@ -789,7 +782,6 @@ const UNITS = {
     name: "MRAD Battery",
     level: "company",
     type: "missile_ad",
-    iconColor: "ad",
     notes: "2 platoons of DK-58 Vityaz (4 vehicles). Medium-range SAM layer.",
     composition: [
       { id: "plt_ad_hq", count: 1, label: "Command Platoon" },
@@ -802,7 +794,6 @@ const UNITS = {
     name: "LRAD Battery",
     level: "company",
     type: "missile_ad",
-    iconColor: "ad",
     notes: "2 platoons of DK-56 Rubezh (4 vehicles). Long-range area denial SAM.",
     composition: [
       { id: "plt_ad_hq", count: 1, label: "Command Platoon" },
@@ -824,7 +815,7 @@ const UNITS = {
     type: "tank",
     notes: "3 tank companies (39 MBT) + HQ. Core combat unit of the armoured regiment.",
     composition: [
-      { id: "btn_tank_hq", count: 1, label: "Command Platoon" },
+      { id: "bat_tank_hq", count: 1, label: "Command Platoon" },
       { id: "coy_tank",   count: 1, label: "Manoeuvre Companies" },
       { id: "coy_tank",   count: 1, label: "Manoeuvre Companies" },
       { id: "coy_tank",   count: 1, label: "Manoeuvre Companies" }
@@ -834,10 +825,10 @@ const UNITS = {
   "bat_heavy_mech": {
     name: "Heavy Mechanized Battalion",
     level: "battalion",
-    type: "ifv_heavy",
+    type: "ifv_tracked",
     notes: "2× BTR-K84 companies + 1× BMP-K84 company. Built on phased-out K-84 hulls. Matches MBT speed and protection — infantry that can actually survive alongside tanks.",
     composition: [
-      { id: "btn_heavy_mech_hq",  count: 1, label: "Command Platoon"  },
+      { id: "bat_heavy_mech_hq",  count: 1, label: "Command Platoon"  },
       { id: "coy_btr_k84", count: 1, label: "Manoeuvre Companies" },
       { id: "coy_btr_k84", count: 1, label: "Manoeuvre Companies" },
       { id: "coy_bmp_k84", count: 1, label: "Manoeuvre Companies" }
@@ -850,7 +841,7 @@ const UNITS = {
     type: "ifv_tracked",
     notes: "3 IFV companies (32 BMP-5L) + HQ. Core combat unit of the infantry regiment, trades speed for firepower.",
     composition: [
-      { id: "btn_bmp_5l_hq", count: 1, label: "Command Platoon" },
+      { id: "bat_bmp_5l_hq", count: 1, label: "Command Platoon" },
       { id: "coy_bmp_5l",   count: 1, label: "Manoeuvre Companies" },
       { id: "coy_bmp_5l",   count: 1, label: "Manoeuvre Companies" },
       { id: "coy_bmp_5l",   count: 1, label: "Manoeuvre Companies" }
@@ -860,10 +851,10 @@ const UNITS = {
   "bat_dar90": {
     name: "DAR-90 Battalion",
     level: "battalion",
-    type: "apc_wheeled",
+    type: "ifv_wheeled",
     notes: "3 APC companies (30 DAR-90) + HQ. Core combat unit of the infantry regiment, trades firepower for speed.",
     composition: [
-      { id: "btn_dar90_hq", count: 1, label: "Command Platoon" },
+      { id: "bat_dar90_hq", count: 1, label: "Command Platoon" },
       { id: "coy_dar90",   count: 1, label: "Manoeuvre Companies" },
       { id: "coy_dar90",   count: 1, label: "Manoeuvre Companies" },
       { id: "coy_dar90",   count: 1, label: "Manoeuvre Companies" }
@@ -886,8 +877,8 @@ const UNITS = {
   "bat_aa": {
     name: "MANPADS Battalion",
     level: "battalion",
-    type: "atgm",
-    notes: "3 MANPADS companies (9 MANPADS) + HQ. Defence against low altitude air.",
+    type: "manpads",
+    notes: "3 MANPADS companies (9 MANPADS) + HQ. Defense against low altitude air.",
     composition: [
       { id: "bat_support_hq", count: 1, label: "Command Platoon" },
       { id: "coy_aa",   count: 1, label: "Fire Companies" },
@@ -899,11 +890,10 @@ const UNITS = {
   "bat_recon": {
     name: "Recon Battalion",
     level: "battalion",
-    type: "ifv_wheeled",
-    iconColor: "recon",
+    type: "recon_ifv_wheeled",
     notes: "3 recon companies + HQ. 18 KBM-90 Rys' + 22 Bumerang. Eyes and ears of the division.",
     composition: [
-      { id: "btn_recon_hq", count: 1, label: "Command" },
+      { id: "bat_recon_hq", count: 1, label: "Command" },
       { id: "coy_recon",    count: 1, label: "Reconnaissance Companies" },
       { id: "coy_recon",    count: 1, label: "Reconnaissance Companies" },
       { id: "coy_recon",    count: 1, label: "Reconnaissance Companies" }
@@ -914,7 +904,6 @@ const UNITS = {
     name: "SPG Battalion",
     level: "battalion",
     type: "spg",
-    iconColor: "arty",
     notes: "3 batteries of 2S19/M (30 guns) + HQ. Organic fire support.",
     composition: [
       { id: "bat_spg_hq",      count: 1, label: "Command Platoon" },
@@ -927,8 +916,7 @@ const UNITS = {
   "bat_mrtr": {
     name: "Mortar Battalion",
     level: "battalion",
-    type: "mortar",
-    iconColor: "arty",
+    type: "mortar_wheeled",
     notes: "3 batteries of DAR-90 Mortar (30 guns) + HQ. Organic fire support.",
     composition: [
       { id: "bat_mrtr_hq",      count: 1, label: "Command Platoon" },
@@ -942,7 +930,6 @@ const UNITS = {
     name: "MLRS Battalion",
     level: "battalion",
     type: "mlrs",
-    iconColor: "arty",
     notes: "2 batteries of Bulat MLRS (12 salvos) + HQ. Organic fire support.",
     composition: [
       { id: "bat_mlrs_hq",      count: 1, label: "Command Platoon" },
@@ -955,7 +942,6 @@ const UNITS = {
     name: "Air Defense Battalion",
     level: "battalion",
     type: "missile_ad",
-    iconColor: "ad",
     notes: "Three-layer defence: SHORAD/MRAD/LRAD. DK-12 Tunguska follows frontline, Vityaz covers medium altitude, Rubezh denies high-altitude approach.",
     composition: [
       { id: "plt_ad_bat_hq",    count: 1, label: "Command" },
@@ -969,7 +955,6 @@ const UNITS = {
     name: "Command Element",
     level: "battalion",
     type: "hq",
-    iconColor: "command",
     notes: "Division commander and accompanying personnel, includes Signal Company.",
     composition: [
       { id: "plt_div_cmd", count: 1},
@@ -980,8 +965,7 @@ const UNITS = {
   "bat_engineer_logistics": {
     name: "Logistics/Engineer Battalion",
     level: "battalion",
-    type: "engineers_vehicle",
-    iconColor: "engineer",
+    type: "engineering_vehicle",
     notes: "Logistics and Engineer companies. Includes BAT-K84 armored recovery vehicle and 10 logistics truck.",
     composition: [
       { id: "coy_engineers", count: 1},
@@ -993,7 +977,6 @@ const UNITS = {
     name: "Medical Battalion",
     level: "battalion",
     type: "medical",
-    iconColor: "engineer",
     notes: "Front and rear medical companies. Includes unarmed medical Bumerang and 10 medical Typhoon-U trucks.",
     composition: [
       { id: "coy_medical_armored", count: 1},
@@ -1002,9 +985,9 @@ const UNITS = {
   },
 
   "bat_military_police": {
-    name: "MP Battalion",
+    name: "Military Police Battalion",
     level: "battalion",
-    type: "mp",
+    type: "military_police",
     notes: "Military Police company. Includes Bulat MP APC.",
     composition: [
       { id: "coy_mp", count: 1}
@@ -1055,7 +1038,7 @@ const UNITS = {
   "div_armored": {
     name: "Armoured Division",
     level: "division",
-    type: "tank",
+    type: "tank", //tank
     notes: "Federal Army heavy tank division. Expeditionary. 3× tank regiments and 1 mechanized infantry regiment, organic fire support and recon. 15,332 personnel.",
     composition: [
       { id: "reg_tank", count: 1, label: "Combat Regiments" },
