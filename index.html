@@ -400,11 +400,21 @@ function renderArmy(aid){
     </div>
     <div class="slabel">Divisions — ${a.divisions.length} defined</div>
     <div class="ugrid">`;
-  if(!a.divisions.length){
-    h+='<div class="empty">// No divisions defined yet — add IDs to ARMIES in urfo_units.js //</div>';
-  } else {
-    for(const id of a.divisions)h+=card(id,1,null);
+if(!a.divisions.length){
+  h+='<div class="empty">// No divisions defined yet — add IDs to ARMIES in urfo_units.js //</div>';
+} else {
+  let prevLabel=null;
+  for(const entry of a.divisions){
+    const id=typeof entry==='string'?entry:entry.id;
+    const count=typeof entry==='object'&&entry.count?entry.count:1;
+    const label=typeof entry==='object'?entry.label:null;
+    if(label&&label!==prevLabel){
+      h+=`<div class="glabel">— ${esc(label)}</div>`;
+      prevLabel=label;
+    }
+    h+=card(id,count,label);
   }
+}
   h+='</div></div>';
   document.getElementById('main').innerHTML=h;
 }
